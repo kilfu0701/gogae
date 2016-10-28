@@ -1,6 +1,7 @@
 package upload
 
 import (
+	"errors"
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/blobstore"
 )
@@ -31,7 +32,7 @@ type Settings struct {
 // url, _ := upload.GenerateUploadURL(ctx, settings)
 func GenerateUploadURL(ctx context.Context, settings *Settings) (string, error) {
 	if err := validateSettings(settings); err != nil {
-		return nil, err
+		return "", err
 	}
 
 	dest := settings.Bucket + "/" + settings.Folder
@@ -43,7 +44,7 @@ func GenerateUploadURL(ctx context.Context, settings *Settings) (string, error) 
 
 	url, err := blobstore.UploadURL(ctx, settings.BlobUrl, &option)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	return url.String(), nil
